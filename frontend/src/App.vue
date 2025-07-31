@@ -16,6 +16,21 @@
       </select>
       <div v-if="models.length === 0" class="text-sm text-gray-400 mt-2">No models found.</div>
     </div>
+    <div class="w-full max-w-xl bg-gray-800 rounded p-4 flex flex-col gap-2">
+      <div class="flex-1 overflow-y-auto max-h-80 mb-2">
+        <div v-for="(msg, idx) in messages" :key="idx" class="mb-2">
+          <div :class="msg.role === 'user' ? 'text-blue-300 text-right' : 'text-green-300 text-left'">
+            <span class="block whitespace-pre-line">{{ msg.content }}</span>
+          </div>
+        </div>
+      </div>
+      <form @submit.prevent="sendMessage" class="flex gap-2">
+        <input v-model="input" class="flex-1 p-2 rounded bg-gray-700 border border-gray-600 text-white" placeholder="Type your message..." :disabled="loading || !selectedModel" />
+        <button type="submit" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700" :disabled="loading || !input || !selectedModel">
+          {{ loading ? '...' : 'Send' }}
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -26,6 +41,9 @@ import axios from 'axios';
 const health = ref('checking');
 const models = ref([]);
 const selectedModel = ref('');
+const messages = ref([]);
+const input = ref('');
+const loading = ref(false);
 
 const healthLabel = computed(() => {
   if (health.value === 'ok') return 'Online';
@@ -66,6 +84,24 @@ async function fetchModels() {
   } catch {
     models.value = [];
   }
+}
+
+async function sendMessage() {
+  if (!input.value || !selectedModel.value) return;
+  loading.value = true;
+  messages.value.push({ role: 'user', content: input.value });
+  const chatHistory = messages.value.map(m => ({ role: m.role, content: m.content }));
+  try {
+    const res = await axios.post('/api/chat', {
+      model: selectedModel.value,
+      messages: chatHistory
+    });
+    messages.value.push({ role: 'assistant', content: res.data.response });
+  } catch {
+    messages.value.push({ role: 'assistant', content: '[Error: Failed to get response]' });
+  }
+  input.value = '';
+  loading.value = false;
 }
 
 onMounted(() => {
