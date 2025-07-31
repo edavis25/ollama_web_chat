@@ -14,6 +14,7 @@
         <div class="w-full max-w-xl flex flex-col flex-1">
           <section class="flex-1 overflow-y-auto mb-8">
             <ChatMessages :messages="messages" />
+            <TypingIndicator v-if="loading" />
           </section>
           <ChatInput
             v-model="input"
@@ -34,6 +35,7 @@ import Sidebar from './components/Sidebar.vue';
 import ChatHeader from './components/ChatHeader.vue';
 import ChatMessages from './components/ChatMessages.vue';
 import ChatInput from './components/ChatInput.vue';
+import TypingIndicator from './components/TypingIndicator.vue';
 import axios from 'axios';
 
 const health = ref('checking');
