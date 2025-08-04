@@ -1,36 +1,47 @@
 <template>
-  <div class="flex min-h-screen bg-zinc-900 text-white">
-    <Sidebar :history="chatHistory" @select="selectHistory" class="flex-shrink-0 w-1/6 min-w-[80px] max-w-[300px]" />
-    <div class="flex flex-col flex-1">
-      <div class="px-8 pt-4 pb-4">
+  <div class="flex h-screen w-screen overflow-hidden bg-zinc-900 text-white">
+    <aside
+      :class="[
+        'flex flex-col bg-zinc-900 h-full z-10 transition-all duration-300 no-wrap',
+        collapsed ? 'w-16 min-w-[4rem] max-w-[4rem]' : 'w-[300px] min-w-[200px] max-w-[320px]'
+      ]"
+    >
+      <Sidebar
+        :history="chatHistory"
+        :collapsed="collapsed"
+        @toggle-collapse="collapsed = !collapsed"
+      />
+    </aside>
+    <div class="flex flex-col flex-1 h-full transition-all duration-300">
+      <header class="shrink-0 p-4 border-b border-zinc-800 bg-zinc-900">
         <ChatHeader
           :status="health"
           :models="models"
           :model="selectedModel"
           @model="val => selectedModel = val"
         />
-      </div>
-      <div class="flex flex-1 items-center justify-center">
-        <div class="w-full max-w-xl flex flex-col flex-1">
-          <section class="flex-1 overflow-y-auto mb-8">
-            <ChatMessages :messages="messages" />
-            <TypingIndicator v-if="loading" />
-          </section>
-          <ChatInput
-            v-model="input"
-            :disabled="loading || !selectedModel"
-            @send="sendMessage"
-          >
-            {{ loading ? '...' : 'Send' }}
-          </ChatInput>
+      </header>
+      <section class="flex-1 flex flex-col justify-end items-center overflow-y-auto">
+        <div class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto" ref="messagesContainer">
+          <ChatMessages :messages="messages" />
+          <TypingIndicator v-if="loading" />
         </div>
-      </div>
+      </section>
+      <footer class="shrink-0 p-4 border-t border-zinc-800 bg-zinc-900 flex justify-center">
+        <ChatInput
+          v-model="input"
+          :disabled="loading || !selectedModel"
+          @send="sendMessage"
+        >
+          {{ loading ? '...' : 'Send' }}
+        </ChatInput>
+      </footer>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import Sidebar from './components/Sidebar.vue';
 import ChatHeader from './components/ChatHeader.vue';
 import ChatMessages from './components/ChatMessages.vue';
@@ -45,6 +56,8 @@ const messages = ref([]);
 const input = ref('');
 const loading = ref(false);
 const chatHistory = ref([]); // Placeholder for sidebar
+const messagesContainer = ref(null);
+const collapsed = ref(false);
 
 function selectHistory(item) {
   // TODO: Load selected chat from history
@@ -72,6 +85,11 @@ async function fetchModels() {
   }
 }
 
+onMounted(() => {
+  fetchHealth();
+  fetchModels();
+});
+
 async function sendMessage() {
   if (!input.value || !selectedModel.value) return;
   loading.value = true;
@@ -90,8 +108,10 @@ async function sendMessage() {
   loading.value = false;
 }
 
-onMounted(() => {
-  fetchHealth();
-  fetchModels();
+watch(messages, async () => {
+  await nextTick();
+  if (messagesContainer.value) {
+    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+  }
 });
 </script>

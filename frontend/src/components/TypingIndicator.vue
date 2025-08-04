@@ -1,10 +1,8 @@
 <template>
-  <div class="flex items-center gap-2 py-2 px-4">
-    <div class="flex items-center">
-      <span class="dot bg-zinc-400 animate-typing"></span>
-      <span class="dot bg-zinc-400 animate-typing [animation-delay:.2s]"></span>
-      <span class="dot bg-zinc-400 animate-typing [animation-delay:.4s]"></span>
-    </div>
+  <div class="flex items-center">
+    <span class="dot bg-zinc-400 animate-typing"></span>
+    <span class="dot bg-zinc-400 animate-typing [animation-delay:.2s]"></span>
+    <span class="dot bg-zinc-400 animate-typing [animation-delay:.4s]"></span>
   </div>
 </template>
 

@@ -7,7 +7,7 @@
       <textarea
         ref="textarea"
         :value="modelValue"
-        class="w-full rounded-xl border border-zinc-700 bg-zinc-800 text-white p-3 pr-12 text-base focus:outline-none focus:ring-2 transition placeholder-gray-400 overflow-y-auto"
+        class="w-full rounded-xl border border-zinc-700 bg-zinc-800 text-white p-3 pr-12 text-base focus:outline-none focus:ring-2 transition placeholder-gray-400 overflow-y-auto max-h-40 resize-none"
         placeholder="Type your message..."
         :disabled="disabled"
         rows="1"
@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, watch } from 'vue';
 
 const props = defineProps({
   disabled: Boolean,
@@ -44,6 +44,12 @@ function onInput(e) {
   resize();
 }
 
+function focusTextarea() {
+  nextTick(() => {
+    if (textarea.value) textarea.value.focus();
+  });
+}
+
 function resize() {
   nextTick(() => {
     if (textarea.value) {
@@ -54,7 +60,7 @@ function resize() {
         return;
       }
       textarea.value.style.height = 'auto';
-      const maxHeight = 384; // 12 lines at ~32px each
+      const maxHeight = 160; // 40 * 4px = 160px, matches max-h-40
       textarea.value.style.height = textarea.value.scrollHeight + 'px';
       if (textarea.value.scrollHeight > maxHeight) {
         textarea.value.style.height = maxHeight + 'px';
@@ -65,4 +71,12 @@ function resize() {
     }
   });
 }
+
+// ensure textarea resizes and refocuses when modelValue is cleared externally
+watch(() => props.modelValue, (val, oldVal) => {
+  if (val === '') {
+    resize();
+    focusTextarea();
+  }
+});
 </script>
