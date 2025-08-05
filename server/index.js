@@ -1,22 +1,11 @@
 import express from 'express';
 import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import { formatPrompt } from './promptFormatter.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
-
-const promptPath = path.join(process.cwd(), '', 'system_prompt.txt');
-function getSystemPrompt() {
-  try {
-    return fs.readFileSync(promptPath, 'utf8');
-  } catch (e) {
-    console.error(e)
-    return '';
-  }
-}
 
 app.get('/api/health', async (req, res) => {
   try {
@@ -47,15 +36,18 @@ app.post('/api/chat', async (req, res) => {
   if (!model || !messages) {
     return res.status(400).json({ error: 'Model and messages are required' });
   }
-  const systemPrompt = getSystemPrompt();
-  console.log('System prompt:', systemPrompt);
+
   try {
-    const ollamaRes = await axios.post('http://localhost:11434/api/chat', {
+    const prompt = formatPrompt({ model, messages });
+
+    const ollamaRes = await axios.post('http://localhost:11434/api/generate', {
       model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...messages
-      ]
+      prompt,
+      // todo handle openai format (conflict with "prompt" -vs- "messages" key?)
+      // messages: [
+      //   { role: 'system', content: systemPrompt },
+      //   ...messages
+      // ]
     }, { responseType: 'stream' });
 
     let fullResponse = '';
@@ -64,9 +56,8 @@ app.post('/api/chat', async (req, res) => {
       for (const line of lines) {
         try {
           const data = JSON.parse(line);
-          if (data.message && data.message.content) {
-            console.log(data.message.content);
-            fullResponse += data.message.content;
+          if (data.response) {
+            fullResponse += data.response;
           }
         } catch (e) {
           console.error('Error parsing response from Ollama:', e);
@@ -80,6 +71,7 @@ app.post('/api/chat', async (req, res) => {
       res.status(500).json({ error: 'Failed to chat with model (stream error)' });
     });
   } catch (e) {
+    console.error(e);
     res.status(500).json({ error: 'Failed to chat with model' });
   }
 });
