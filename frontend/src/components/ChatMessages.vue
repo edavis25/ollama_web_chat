@@ -4,10 +4,10 @@
       v-for="(msg, idx) in messages"
       :key="idx"
       :class="`
-        max-w-2xl px-4 py-3 rounded-xl break-words
+        py-2 break-words
         ${msg.role === 'user'
-          ? 'self-end bg-blue-900 text-blue-200'
-          : 'self-start bg-green-900 text-green-200'
+          ? 'self-end px-4 bg-indigo-100 text-indigo-900 rounded-3xl dark:bg-zinc-700 dark:text-zinc-100'
+          : 'self-start'
        }`"
     >
       <span class="whitespace-pre-line">{{ msg.content }}</span>

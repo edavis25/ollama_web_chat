@@ -37,7 +37,7 @@
           <TypingIndicator v-if="loading" />
         </div>
       </section>
-      <footer class="shrink-0 p-4 flex justify-center main-section">
+      <footer class="pb-8 self-center w-full max-w-2xl">
         <ChatInput
           v-model="input"
           :disabled="loading || !selectedModel"
