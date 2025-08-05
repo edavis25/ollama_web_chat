@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 max-h-full">
     <div
       v-for="(msg, idx) in messages"
       :key="idx"

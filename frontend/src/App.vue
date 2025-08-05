@@ -13,7 +13,7 @@
         @toggle-theme="toggleTheme"
       />
     </aside>
-    <div class="flex flex-col flex-1 h-full transition-all duration-300 main-section">
+    <div class="flex flex-col flex-1 h-full transition-all duration-300 main-section gap-12">
       <header class="shrink-0 p-4 border-b border-zinc-800 main-section">
         <ChatHeader
           :status="health"
@@ -23,12 +23,12 @@
         />
       </header>
       <section class="flex-1 flex flex-col justify-end items-center overflow-y-auto">
-        <div class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto" ref="messagesContainer">
+        <div class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto gap-5 py-5" ref="messagesContainer">
           <ChatMessages :messages="messages" />
-          <TypingIndicator v-if="loading" />
+          <TypingIndicator v-if="loading || true" />
         </div>
       </section>
-      <footer class="shrink-0 p-4 border-t border-zinc-800 flex justify-center main-section">
+      <footer class="shrink-0 p-4 flex justify-center main-section">
         <ChatInput
           v-model="input"
           :disabled="loading || !selectedModel"
