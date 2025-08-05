@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen w-screen overflow-hidden bg-zinc-900 text-white">
+  <div :class="['flex h-screen w-screen overflow-hidden', theme === 'dark' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-900']">
     <aside
       :class="[
         'flex flex-col bg-zinc-900 h-full z-10 transition-all duration-300 no-wrap',
@@ -10,10 +10,11 @@
         :history="chatHistory"
         :collapsed="collapsed"
         @toggle-collapse="collapsed = !collapsed"
+        @toggle-theme="toggleTheme"
       />
     </aside>
-    <div class="flex flex-col flex-1 h-full transition-all duration-300">
-      <header class="shrink-0 p-4 border-b border-zinc-800 bg-zinc-900">
+    <div class="flex flex-col flex-1 h-full transition-all duration-300 main-section">
+      <header class="shrink-0 p-4 border-b border-zinc-800 main-section">
         <ChatHeader
           :status="health"
           :models="models"
@@ -27,7 +28,7 @@
           <TypingIndicator v-if="loading" />
         </div>
       </section>
-      <footer class="shrink-0 p-4 border-t border-zinc-800 bg-zinc-900 flex justify-center">
+      <footer class="shrink-0 p-4 border-t border-zinc-800 flex justify-center main-section">
         <ChatInput
           v-model="input"
           :disabled="loading || !selectedModel"
@@ -58,6 +59,7 @@ const loading = ref(false);
 const chatHistory = ref([]); // Placeholder for sidebar
 const messagesContainer = ref(null);
 const collapsed = ref(false);
+const theme = ref(localStorage.getItem('theme') || 'dark');
 
 function selectHistory(item) {
   // TODO: Load selected chat from history
@@ -108,10 +110,26 @@ async function sendMessage() {
   loading.value = false;
 }
 
+function toggleTheme() {
+  theme.value = theme.value === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', theme.value);
+}
+
 watch(messages, async () => {
   await nextTick();
   if (messagesContainer.value) {
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
   }
 });
+
+watch(theme, (val) => {
+  const root = document.documentElement;
+  if (val === 'dark') {
+    root.classList.add('dark');
+    root.classList.remove('light');
+  } else {
+    root.classList.add('light');
+    root.classList.remove('dark');
+  }
+}, { immediate: true });
 </script>

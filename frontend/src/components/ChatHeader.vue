@@ -1,12 +1,18 @@
 <template>
-  <div class="pb-5 mb-3 bg-zinc-900">
-    <h1 class="text-xl font-bold mb-2">
-      Ollama Web UI
-    </h1>
+  <header class="
+    px-4 py-2 flex items-center justify-between
+    bg-zinc-900 text-zinc-900 border-b border-zinc-800
+    dark:text-zinc-100 dark:bg-white dark:border-zinc-200"
+  >
+    <h1 class="text-xl font-bold">Ollama Web Chat</h1>
     <div class="flex items-center gap-2">
       <select
         id="model-select"
-        class="bg-zinc-800 border border-zinc-700 text-white rounded px-2 py-1"
+        class="
+          rounded px-2 py-1
+          text-zinc-900 bg-zinc-900 border border-zinc-800
+          dark:border-zinc-200 dark:text-zinc-100
+        "
         v-model="model"
         @change="$emit('model', model)"
       >
@@ -20,7 +26,7 @@
       </select>
       <StatusBadge :status="status" class="ml-2" />
     </div>
-  </div>
+  </header>
 </template>
 
 <script setup>
@@ -39,3 +45,9 @@ const model = ref(props.model);
 
 watch(() => props.model, v => model.value = v);
 </script>
+
+<style scoped>
+.dark select {
+  color: #f4f4f5 !important; /* zinc-100 */
+}
+</style>

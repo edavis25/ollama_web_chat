@@ -1,13 +1,13 @@
 <template>
   <form
-    class="flex items-end gap-0 px-0 py-0 bg-zinc-900 w-full"
+    class="flex items-end gap-0 px-0 py-0 w-full dark:bg-zinc-200 dark:text-zinc-900"
     @submit.prevent="$emit('send', modelValue)"
   >
-    <div class="relative flex-1 w-full">
+    <div class="relative flex-1 w-full dark:border-zinc-300">
       <textarea
         ref="textarea"
         :value="modelValue"
-        class="w-full rounded-xl border border-zinc-700 bg-zinc-800 text-white p-3 pr-12 text-base focus:outline-none focus:ring-2 transition placeholder-gray-400 overflow-y-auto max-h-40 resize-none"
+        class="w-full rounded-xl border border-zinc-700 dark:border-zinc-300 bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 p-3 pr-12 text-base focus:outline-none focus:ring-2 transition placeholder-gray-400 dark:placeholder-zinc-500 overflow-y-auto max-h-40 resize-none"
         placeholder="Type your message..."
         :disabled="disabled"
         rows="1"
@@ -16,7 +16,7 @@
       />
       <button
         type="submit"
-        class="absolute top-1/2 right-3 -translate-y-1/2 text-blue-500 hover:text-blue-600 disabled:text-zinc-500 p-1"
+        class="absolute top-1/2 right-3 -translate-y-1/2 text-blue-500 dark:text-blue-600 hover:text-blue-600 dark:hover:text-blue-700 disabled:text-zinc-500 p-1"
         :disabled="disabled || !modelValue.trim()"
         tabindex="-1"
         style="pointer-events:auto;"
