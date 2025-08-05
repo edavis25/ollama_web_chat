@@ -1,38 +1,8 @@
-/* Light/Dark mode overrides for Tailwind base */
 :root.light {
   --tw-bg-opacity: 1;
   --tw-text-opacity: 1;
-  background-color: #f4f4f5;
-  color: #18181b;
 }
 :root.dark {
   --tw-bg-opacity: 1;
   --tw-text-opacity: 1;
-  background-color: #18181b;
-  color: #f4f4f5;
-}
-
-/* --- SIDEBAR --- */
-/* Light mode: sidebar very light gray */
-.light .bg-zinc-900 {
-  background-color: #f7f7fa !important;
-}
-.light .text-white {
-  color: #18181b !important;
-}
-.light .border-zinc-800 {
-  border-color: #e4e4e7 !important;
-}
-.light .bg-zinc-800 {
-  background-color: #e4e4e7 !important;
-}
-
-/* Dark mode: sidebar stays dark, main is slightly lighter */
-.dark .main-section {
-  background-color: #23232b !important; /* slightly lighter than #18181b */
-}
-
-/* Light mode: main stays white-ish */
-.light .main-section {
-  background-color: #fff !important;
 }

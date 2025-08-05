@@ -1,8 +1,14 @@
 <template>
-  <div :class="['flex h-screen w-screen overflow-hidden', theme === 'dark' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-900']">
+  <div :class="[
+      'flex h-screen w-screen overflow-hidden',
+      'bg-white text-zinc-900',
+      'dark:bg-zinc-800 dark:text-zinc-100'
+    ]"
+  >
     <aside
       :class="[
-        'flex flex-col bg-zinc-900 h-full z-10 transition-all duration-300 no-wrap',
+        'flex flex-col h-full z-10 transition-all duration-300 no-wrap',
+        'bg-gray-100 dark:bg-zinc-900',
         collapsed ? 'w-16 min-w-[4rem] max-w-[4rem]' : 'w-[300px] min-w-[200px] max-w-[320px]'
       ]"
     >
@@ -14,7 +20,7 @@
       />
     </aside>
     <div class="flex flex-col flex-1 h-full transition-all duration-300 main-section gap-12">
-      <header class="shrink-0 p-4 border-b border-zinc-800 main-section">
+      <header class="shrink-0 p-4 main-section">
         <ChatHeader
           :status="health"
           :models="models"
@@ -23,7 +29,10 @@
         />
       </header>
       <section class="flex-1 flex flex-col justify-end items-center overflow-y-auto">
-        <div class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto gap-5 py-5" ref="messagesContainer">
+        <div
+            class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto gap-5 py-5"
+            ref="messagesContainer"
+        >
           <ChatMessages :messages="messages" />
           <TypingIndicator v-if="loading" />
         </div>
