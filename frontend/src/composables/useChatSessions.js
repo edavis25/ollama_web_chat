@@ -98,6 +98,22 @@ export function useChatSessions() {
     return response;
   }
 
+  async function renameSession(id, newTitle) {
+    const sessions = await chatStorage.loadSessions();
+    const idx = sessions.findIndex(s => s.id === id);
+    if (idx === -1) return false;
+    sessions[idx].title = newTitle;
+    sessions[idx].updatedAt = Date.now();
+    await chatStorage.saveSession(sessions[idx]);
+    const updatedSessions = await chatStorage.loadSessions();
+    chatHistory.value = [...updatedSessions.map(s => ({
+      id: s.id,
+      title: s.title,
+      updatedAt: s.updatedAt
+    }))];
+    return true;
+  }
+
   function generateNewChatTitle(sessions) {
     // when generating new chats, just suffix a number to "New Chat"
     // until more advanced title generation is implemented
@@ -127,6 +143,7 @@ export function useChatSessions() {
     loadSessions,
     createNewSession,
     selectSession,
-    sendMessage
+    sendMessage,
+    renameSession
   };
 }

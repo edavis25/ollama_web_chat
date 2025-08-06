@@ -15,6 +15,7 @@
       <Sidebar
         :history="chatHistory"
         :collapsed="collapsed"
+        :renameSession="renameSession"
         @toggle-collapse="collapsed = !collapsed"
         @toggle-theme="toggleTheme"
         @new-chat="createNewSession"
@@ -71,12 +72,12 @@ const theme = ref(localStorage.getItem('theme') || 'light');
 
 const {
   chatHistory,
-  currentSessionId,
   messages,
   loadSessions,
   createNewSession,
   selectSession,
-  sendMessage: sendChatMessage
+  sendMessage: sendChatMessage,
+  renameSession
 } = useChatSessions();
 
 onMounted(async () => {

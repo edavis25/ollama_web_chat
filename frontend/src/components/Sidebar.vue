@@ -10,7 +10,9 @@
         @click="$emit('toggle-collapse')"
         class="text-xl focus:outline-none"
       >
-        ☰
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
       </button>
       <span
         v-if="!collapsed"
@@ -32,32 +34,74 @@
       v-if="!collapsed"
       class="flex-1 overflow-y-auto p-4 space-y-2"
     >
-      <li v-for="(item, idx) in history" :key="idx">
-        <a
-          class="block hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-          href="#"
-          @click.prevent="$emit('select', item.id)"
-        >
-          {{ item.title }}
-        </a>
-      </li>
+      <SessionListItem
+        v-for="(item, idx) in sessionList"
+        :key="idx"
+        :item="item"
+        :isEditing="isItemEditing(item.id)"
+        :editValue="getEditValue(item.id, item.title)"
+        :collapsed="collapsed"
+        @select="$emit('select', $event)"
+        @edit="onEdit"
+        @rename="onRename"
+        @cancel="clearEditState"
+        @update-edit-value="updateEditValue"
+      />
     </ul>
   </nav>
 </template>
 
 <script setup>
+import { computed, ref } from "vue";
+import SessionListItem from "./SessionListItem.vue";
 import ThemeToggle from './ThemeToggle.vue';
 
-defineEmits(['toggle-collapse', 'toggle-theme', 'select', 'new-chat']);
-
-defineProps({
-  history: {
-    type: Array,
-    default: () => []
-  },
-  collapsed: {
-    type: Boolean,
-    default: false
-  }
+const props = defineProps({
+  history: { type: Array, required: true },
+  collapsed: { type: Boolean, default: false },
+  renameSession: { type: Function, required: true }
 });
+
+defineEmits(["select", "toggle-collapse", "toggle-theme", "new-chat"]);
+
+const sessionList = computed(() => {
+  return [...props.history].sort(
+    (a, b) => (b.timestamp || 0) - (a.timestamp || 0)
+  );
+});
+
+const editingId = ref(null);
+const editValues = ref({});
+
+function isItemEditing(id) {
+  return editingId.value === id;
+}
+
+function getEditValue(id, defaultTitle) {
+  return editingId.value === id ? editValues.value[id] || defaultTitle : '';
+}
+
+function onEdit(id) {
+  editingId.value = id;
+  const session = sessionList.value.find(s => s.id === id);
+  if (session) {
+    editValues.value[id] = session.title;
+  }
+}
+
+function updateEditValue(id, value) {
+  editValues.value[id] = value;
+}
+
+async function onRename({ id, title }) {
+  if (title && title.trim() && id) {
+    await props.renameSession(id, title.trim());
+  }
+  clearEditState();
+}
+
+function clearEditState() {
+  editingId.value = null;
+  editValues.value = {};
+}
 </script>
