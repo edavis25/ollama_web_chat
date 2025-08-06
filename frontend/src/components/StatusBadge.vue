@@ -1,5 +1,5 @@
 <template>
-  <span :class="badgeClass">
+  <span :class="`${badgeClass} inline-flex items-center gap-0.5`">
     <span
       class="inline-block w-2 h-2 rounded-full mr-1"
       :class="dotClass"
