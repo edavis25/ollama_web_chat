@@ -17,6 +17,8 @@
         :collapsed="collapsed"
         @toggle-collapse="collapsed = !collapsed"
         @toggle-theme="toggleTheme"
+        @new-chat="createNewSession"
+        @select="selectSession"
       />
     </aside>
     <div class="flex flex-col flex-1 h-full transition-all duration-300 main-section gap-12">
@@ -56,21 +58,34 @@ import ChatMessages from './components/ChatMessages.vue';
 import ChatInput from './components/ChatInput.vue';
 import TypingIndicator from './components/TypingIndicator.vue';
 import axios from 'axios';
+import { useChatSessions } from './composables/useChatSessions.js';
 
 const health = ref('checking');
 const models = ref([]);
 const selectedModel = ref('');
-const messages = ref([]);
 const input = ref('');
 const loading = ref(false);
-const chatHistory = ref([]); // Placeholder for sidebar
 const messagesContainer = ref(null);
 const collapsed = ref(false);
 const theme = ref(localStorage.getItem('theme') || 'light');
 
-function selectHistory(item) {
-  // TODO: Load selected chat from history
-}
+const {
+  chatHistory,
+  currentSessionId,
+  messages,
+  loadSessions,
+  createNewSession,
+  selectSession,
+  sendMessage: sendChatMessage
+} = useChatSessions();
+
+onMounted(async () => {
+  await Promise.all([
+      fetchHealth(),
+      fetchModels(),
+      loadSessions()
+  ])
+});
 
 async function fetchHealth() {
   health.value = 'checking';
@@ -94,32 +109,10 @@ async function fetchModels() {
   }
 }
 
-onMounted(() => {
-  fetchHealth();
-  fetchModels();
-});
-
 async function sendMessage() {
-  if (!input.value || !selectedModel.value) {
-    return
-  }
-
   loading.value = true;
-  messages.value.push({ role: 'user', content: input.value });
-
-  const chatHistory = messages.value.map(m => ({ role: m.role, content: m.content }));
-  input.value = '';
-  try {
-    const res = await axios.post('/api/chat', {
-      model: selectedModel.value,
-      messages: chatHistory
-    });
-    messages.value.push({ role: 'assistant', content: res.data.response });
-  } catch {
-    messages.value.push({ role: 'assistant', content: '[Error: Failed to get response]' });
-  } finally {
-    loading.value = false;
-  }
+  await sendChatMessage({ input, selectedModel });
+  loading.value = false;
 }
 
 function toggleTheme() {

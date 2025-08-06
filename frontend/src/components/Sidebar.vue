@@ -19,6 +19,14 @@
         Chat History
       </span>
       <ThemeToggle @toggle-theme="$emit('toggle-theme')" />
+      <button
+        v-if="!collapsed"
+        @click="$emit('new-chat')"
+        class="ml-2 px-2 py-1 rounded bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-xs text-zinc-700 dark:text-zinc-200"
+        title="New Chat"
+      >
+        + New Chat
+      </button>
     </div>
     <ul
       v-if="!collapsed"
@@ -26,9 +34,9 @@
     >
       <li v-for="(item, idx) in history" :key="idx">
         <a
-          class="block text-zinc-100 dark:text-zinc-900 hover:text-zinc-100 dark:hover:text-zinc-900 transition"
+          class="block hover:text-zinc-600 dark:hover:text-zinc-300 transition"
           href="#"
-          @click.prevent="$emit('select', item)"
+          @click.prevent="$emit('select', item.id)"
         >
           {{ item.title }}
         </a>
@@ -40,7 +48,7 @@
 <script setup>
 import ThemeToggle from './ThemeToggle.vue';
 
-defineEmits(['toggle-collapse', 'toggle-theme', 'select']);
+defineEmits(['toggle-collapse', 'toggle-theme', 'select', 'new-chat']);
 
 defineProps({
   history: {
