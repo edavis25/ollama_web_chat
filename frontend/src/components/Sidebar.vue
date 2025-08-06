@@ -18,17 +18,7 @@
       >
         Chat History
       </span>
-      <button
-        v-if="!collapsed"
-        @click="$emit('toggle-theme')"
-        class="
-          ml-auto px-2 py-1 rounded text-xs
-          hover:bg-gray-200 dark:hover:bg-zinc-950 transition
-        "
-        aria-label="Toggle dark/light mode"
-      >
-        🌓
-      </button>
+      <ThemeToggle @toggle-theme="$emit('toggle-theme')" />
     </div>
     <ul
       v-if="!collapsed"
@@ -47,18 +37,19 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: 'Sidebar',
-  props: {
-    history: {
-      type: Array,
-      default: () => []
-    },
-    collapsed: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+import ThemeToggle from './ThemeToggle.vue';
+
+defineEmits(['toggle-collapse', 'toggle-theme', 'select']);
+
+defineProps({
+  history: {
+    type: Array,
+    default: () => []
+  },
+  collapsed: {
+    type: Boolean,
+    default: false
   }
-}
+});
 </script>

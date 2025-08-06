@@ -42,9 +42,7 @@
           v-model="input"
           :disabled="loading || !selectedModel"
           @send="sendMessage"
-        >
-          {{ loading ? '...' : 'Send' }}
-        </ChatInput>
+        />
       </footer>
     </div>
   </div>
@@ -68,7 +66,7 @@ const loading = ref(false);
 const chatHistory = ref([]); // Placeholder for sidebar
 const messagesContainer = ref(null);
 const collapsed = ref(false);
-const theme = ref(localStorage.getItem('theme') || 'dark');
+const theme = ref(localStorage.getItem('theme') || 'light');
 
 function selectHistory(item) {
   // TODO: Load selected chat from history
@@ -102,10 +100,15 @@ onMounted(() => {
 });
 
 async function sendMessage() {
-  if (!input.value || !selectedModel.value) return;
+  if (!input.value || !selectedModel.value) {
+    return
+  }
+
   loading.value = true;
   messages.value.push({ role: 'user', content: input.value });
+
   const chatHistory = messages.value.map(m => ({ role: m.role, content: m.content }));
+  input.value = '';
   try {
     const res = await axios.post('/api/chat', {
       model: selectedModel.value,
@@ -114,9 +117,9 @@ async function sendMessage() {
     messages.value.push({ role: 'assistant', content: res.data.response });
   } catch {
     messages.value.push({ role: 'assistant', content: '[Error: Failed to get response]' });
+  } finally {
+    loading.value = false;
   }
-  input.value = '';
-  loading.value = false;
 }
 
 function toggleTheme() {
