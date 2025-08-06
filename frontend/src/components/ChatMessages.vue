@@ -10,11 +10,13 @@
           : 'self-start'
        }`"
     >
-      <span class="whitespace-pre-line">{{ msg.content }}</span>
+      <MarkdownRenderer :markdown="msg.content" />
     </div>
   </div>
 </template>
 
 <script setup>
+import MarkdownRenderer from './MarkdownRenderer.vue';
+
 defineProps({ messages: Array });
 </script>
