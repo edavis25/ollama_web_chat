@@ -1,16 +1,16 @@
 <template>
   <nav
     :class="[
-      'flex flex-col h-screen transition-all duration-200 overflow-hidden',
-      collapsed ? 'w-16 min-w-[4rem] max-w-[4rem] sidebar-nowrap' : 'w-[300px] min-w-[200px] max-w-[320px]',
+      'flex flex-col h-screen transition-all duration-150 overflow-hidden',
+      collapsed ? 'w-[3.5rem] sidebar-nowrap' : 'w-[300px] min-w-[200px] max-w-[320px]',
     ]"
   >
-    <div class="flex items-center gap-2 h-[56px] p-4 border-b border-gray-200 dark:border-zinc-800">
+    <div class="flex items-center gap-2 h-[56px] p-2 border-b border-gray-200 dark:border-zinc-800">
       <button
         @click="$emit('toggle-collapse')"
-        class="text-xl focus:outline-none"
+        class="text-xl focus:outline-none flex items-center justify-center w-9 h-9"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </button>

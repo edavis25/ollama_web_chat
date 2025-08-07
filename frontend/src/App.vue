@@ -9,7 +9,6 @@
       :class="[
         'flex flex-col h-full z-10 transition-all duration-300 no-wrap',
         'bg-gray-100 dark:bg-zinc-900',
-        collapsed ? 'w-16 min-w-[4rem] max-w-[4rem]' : 'w-[300px] min-w-[200px] max-w-[320px]'
       ]"
     >
       <Sidebar
