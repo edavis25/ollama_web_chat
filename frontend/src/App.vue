@@ -32,8 +32,8 @@
       </header>
       <section class="flex-1 flex flex-col justify-end items-center overflow-y-auto">
         <div
-            class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto gap-5 py-5"
-            ref="messagesContainer"
+          class="w-full max-w-2xl flex-1 flex flex-col justify-end overflow-y-auto gap-5 py-5"
+          ref="messagesContainer"
         >
           <ChatMessages :messages="messages" />
           <TypingIndicator v-if="loading" />
