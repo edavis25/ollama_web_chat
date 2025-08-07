@@ -36,6 +36,7 @@
     >
       <SessionListItem
         v-for="(item, idx) in sessionList"
+        :class="`${currentSessionId === item.id ? 'font-semibold' : ''}`"
         :key="idx"
         :item="item"
         :isEditing="isItemEditing(item.id)"
@@ -55,6 +56,7 @@
 import { computed, ref } from "vue";
 import SessionListItem from "./SessionListItem.vue";
 import ThemeToggle from './ThemeToggle.vue';
+import { useChatSessions } from '../composables/useChatSessions.js';
 
 const props = defineProps({
   history: { type: Array, required: true },
@@ -63,6 +65,8 @@ const props = defineProps({
 });
 
 defineEmits(["select", "toggle-collapse", "toggle-theme", "new-chat"]);
+
+const { currentSessionId, loadSessions } = useChatSessions();
 
 const sessionList = computed(() => {
   return [...props.history].sort(

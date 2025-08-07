@@ -4,11 +4,12 @@ import axios from 'axios';
 
 const chatStorage = new LocalStorageChatDriver();
 
-export function useChatSessions() {
-  const chatHistory = ref([]); // Sidebar session list
-  const currentSessionId = ref(null);
-  const messages = ref([]);
+// Singleton state: shared between all consumers of this composable
+const chatHistory = ref([]); // Sidebar session list
+const currentSessionId = ref(null);
+const messages = ref([]);
 
+export function useChatSessions() {
   async function loadSessions() {
     const sessions = await chatStorage.loadSessions();
     chatHistory.value = sessions.map(s => ({
