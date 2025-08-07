@@ -5,7 +5,7 @@
       collapsed ? 'w-16 min-w-[4rem] max-w-[4rem]' : 'w-[300px] min-w-[200px] max-w-[320px]',
     ]"
   >
-    <div class="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-zinc-800">
+    <div class="flex items-center gap-2 h-[56px] p-4 border-b border-gray-200 dark:border-zinc-800">
       <button
         @click="$emit('toggle-collapse')"
         class="text-xl focus:outline-none"
@@ -14,7 +14,10 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </button>
-      <ThemeToggle @toggle-theme="$emit('toggle-theme')" />
+      <ThemeToggle
+        v-if="!collapsed"
+        @toggle-theme="$emit('toggle-theme')"
+      />
     </div>
     <div v-if="!collapsed" class="flex flex-col gap-2 p-4 pt-2">
       <span>
