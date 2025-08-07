@@ -70,7 +70,7 @@ const { currentSessionId, loadSessions } = useChatSessions();
 
 const sessionList = computed(() => {
   return [...props.history].sort(
-    (a, b) => (b.timestamp || 0) - (a.timestamp || 0)
+    (a, b) => (b.updatedAt || b.timestamp || 0) - (a.updatedAt || a.timestamp || 0)
   );
 });
 
