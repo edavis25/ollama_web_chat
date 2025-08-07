@@ -5,7 +5,7 @@
       collapsed ? 'w-16 min-w-[4rem] max-w-[4rem]' : 'w-[300px] min-w-[200px] max-w-[320px]',
     ]"
   >
-    <div class="flex items-center gap-2 p-4 border-b border-gray-300 dark:border-zinc-700">
+    <div class="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-zinc-800">
       <button
         @click="$emit('toggle-collapse')"
         class="text-xl focus:outline-none"
@@ -14,25 +14,29 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </button>
-      <span
-        v-if="!collapsed"
-        class="font-semibold flex-1 whitespace-nowrap"
-      >
-        Chat History
-      </span>
       <ThemeToggle @toggle-theme="$emit('toggle-theme')" />
-      <button
-        v-if="!collapsed"
-        @click="$emit('new-chat')"
-        class="ml-2 px-2 py-1 rounded bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-xs text-zinc-700 dark:text-zinc-200"
-        title="New Chat"
-      >
-        + New Chat
+    </div>
+    <div v-if="!collapsed" class="flex flex-col gap-2 p-4 pt-2">
+      <span>
+        <button
+            @click="$emit('new-chat')"
+            class="inline-flex items-center gap-1 px-0 py-1 text-sm hover:text-zinc-950 dark:hover:text-zinc-300"
+            style="justify-content: flex-start;"
+            title="New Chat"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        New Chat
       </button>
+      </span>
+    </div>
+    <div v-if="!collapsed" class="px-4 pb-2">
+      <h2 class="text-xs tracking-wider uppercase text-zinc-500">Chat History</h2>
     </div>
     <ul
       v-if="!collapsed"
-      class="flex-1 overflow-y-auto p-4 space-y-2"
+      class="flex-1 overflow-y-auto p-4 pt-0 space-y-2"
     >
       <SessionListItem
         v-for="(item, idx) in sessionList"
